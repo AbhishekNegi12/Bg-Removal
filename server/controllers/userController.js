@@ -25,6 +25,8 @@ const clerkWebhooks = async (req, res) => {
     // const evt = whook.verify(payload, headers);
     // const { data, type } = evt;
 
+    const { data, type } = req.body
+
     switch (type) {
       case "user.created": {
         const userData = {
@@ -32,8 +34,8 @@ const clerkWebhooks = async (req, res) => {
           email: data.email_addresses[0].email_address,
           firstName: data.first_name,
           lastName: data.last_name,
-          photo: data.image_url,
-        };
+          photo: data.image_url
+        }
         await userModel.create(userData);
         res.json({});
         break;
