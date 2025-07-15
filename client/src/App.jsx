@@ -9,12 +9,14 @@ import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 // import { SignInButton } from "@clerk/clerk-react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 const App = () => {
   return (
     <div className="min-h-screen bg-[#FFEFD5]">
-      <Navbar/>
-      
+      <ToastContainer position="bottom-right"/>
+      <Navbar/>      
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/result" element={<Result/>}></Route>

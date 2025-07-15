@@ -1,8 +1,11 @@
 import React from 'react'
 import { assets } from '../assets/assets'
 import { useUser, useClerk } from '@clerk/clerk-react';
+import { useContext } from 'react';
+import { AppContext } from '../context/AppContextContext.jsx';
 
 const Hero = () => {
+  const {removeBg} = useContext(AppContext)
   const { user } = useUser();
   const { openSignIn } = useClerk();
   return (
@@ -30,7 +33,9 @@ const Hero = () => {
             {user ? (
               <>
                 <input 
+                  onChange={e=> removeBg(e.target.files[0])}
                   type="file" 
+                  accept='image/*'
                   name="image-upload" 
                   id="upload1" 
                   hidden 

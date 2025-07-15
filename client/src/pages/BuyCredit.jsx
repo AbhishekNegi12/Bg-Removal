@@ -1,8 +1,72 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {  plans } from '../assets/assets'
 import EraseLogo from '../assets/EraseLogo.png';
+import { AppContext } from '../context/AppContextContext';
+import { useNavigate } from 'react-router-dom';
+import { useAuth, useUser } from '@clerk/clerk-react';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const BuyCredit = () => {
+
+  const {backendUrl,loadCreditsData} = useContext(AppContext)
+
+  const navigate = useNavigate();
+  const {getToken} = useAuth();
+  const {user} = useUser()
+
+  const initPay = (order) => {
+    if (!window.Razorpay) {
+      toast.error("Razorpay SDK not loaded. Please check your internet connection.");
+      return;
+    }
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: 'Credits Payment',
+      description: 'Credits payment',
+      order_id: order.id,
+      receipt: order.receipt,
+      handler: async (response)=> {
+        console.log(response);
+        // You can add further logic here, e.g. verify payment, update credits, etc.
+        const token = await getToken()
+        try {
+          const {data} = await axios.post(backendUrl+'/api/user/verify-razor',response,{headers:{token}})
+          if(data.success){
+            loadCreditsData()
+            navigate('/')
+            toast.success('Credits Added');
+
+          }
+
+        } catch (error) {
+          console.log(error)
+          toast.error(error.message)
+        }
+      }
+    };
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  }
+
+  const paymentRazorpay = async (planId) => {
+    try {
+      const token = await getToken();
+      const clerkId = user?.id
+      const { data } = await axios.post(backendUrl + '/api/user/pay-razor', { planId,clerkId }, { headers: { token } });
+      if (data.success && data.order) {
+        initPay(data.order);
+      } else {
+        toast.error(data.message || "Unable to initiate payment.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  }
+
   return (
     <div className='min-h-[80vh] text-center pt-14 mb-10 bg-[#FFEFD5]'>
       <button className='border-2 border-black px-10 py-2 rounded-full mb-6 text-black font-bold bg-white shadow hover:bg-black hover:text-white transition-all duration-300'>Our Plans</button>
@@ -18,7 +82,7 @@ const BuyCredit = () => {
               <span className=''>${item.price}</span>
               <span className="text-base font-medium text-gray-500"> / {item.credits} credits</span>
             </p> 
-            <button className="w-full px-6 py-2 rounded-full bg-black text-white font-semibold shadow hover:bg-gray-900 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-black">Purchase</button>
+            <button onClick={()=>paymentRazorpay(item.id)} className="w-full px-6 py-2 rounded-full bg-black text-white font-semibold shadow hover:bg-gray-900 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-black">Purchase</button>
           </div>
         ))}
       </div>

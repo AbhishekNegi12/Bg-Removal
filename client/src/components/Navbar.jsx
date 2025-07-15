@@ -1,15 +1,28 @@
 
 import React, { useState } from 'react';
 import EraseLogo from '../assets/EraseLogo.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useClerk, useUser, UserButton } from '@clerk/clerk-react';
+import { useContext } from 'react';
+import { AppContext } from '../context/AppContextContext.jsx';
+import { useEffect } from 'react';
 
 
 const Navbar = () => {
   const { openSignIn, signOut } = useClerk();
-  const { user } = useUser();
+  const { user,isSignedIn } = useUser();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navigate = useNavigate()
+
+  const {credit,loadCreditsData}= useContext(AppContext)
+
+  useEffect(()=>{
+    if(isSignedIn){
+      loadCreditsData()
+    }
+  },[isSignedIn, loadCreditsData])
 
   return (
     <nav className="w-full bg-white">
@@ -31,7 +44,16 @@ const Navbar = () => {
             <li>
               {user ? (
                 <div className="flex flex-col md:flex-row md:items-center gap-2">
-                  <span className="text-black font-semibold text-lg px-2">{user.username || user.firstName || user.emailAddress}</span>
+                  <span className="text-black font-semibold text-lg px-2">
+                    {user.username || user.firstName || user.emailAddress}
+                  </span>
+                  <button
+                    className="bg-black text-white rounded px-4 py-1 flex items-center justify-center font-semibold text-lg mx-2 whitespace-nowrap hover:bg-gray-800 transition-all duration-200 cursor-pointer"
+                    onClick={() => navigate('/buy')}
+                    title="Buy more credits"
+                  >
+                    Credits: {credit}
+                  </button>
                   <UserButton afterSignOutUrl="/" />
                   <button
                     onClick={() => signOut()}

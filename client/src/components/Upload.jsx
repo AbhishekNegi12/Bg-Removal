@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { assets } from "../assets/assets";
 import { useUser, useClerk } from "@clerk/clerk-react";
+import { AppContext } from "../context/AppContextContext.jsx";
 
 const Upload = () => {
+  const { removeBg } = useContext(AppContext);
   const { user } = useUser();
   const { openSignIn } = useClerk();
 
@@ -16,6 +18,8 @@ const Upload = () => {
         {user ? (
           <>
             <input
+              onChange={(e) => removeBg(e.target.files[0])}
+              accept="image/*"
               type="file"
               name="image-upload"
               id="upload2"
@@ -27,7 +31,11 @@ const Upload = () => {
               htmlFor="upload2"
               tabIndex={0}
             >
-              <img width={20} src={assets.upload_btn_icon} alt="Upload Button" />
+              <img
+                width={20}
+                src={assets.upload_btn_icon}
+                alt="Upload Button"
+              />
               <span className="text-white text-sm">Upload your Image</span>
             </label>
           </>
