@@ -28,9 +28,8 @@ EraseBg is a full-stack SaaS application for AI-powered background removal from 
 
 ## Live Preview
 
-```
-[Live Preview](https://your-live-app-link.com)
-```
+[Live Preview](https://bg-removal-iota-one.vercel.app)
+
 
 ---
 
