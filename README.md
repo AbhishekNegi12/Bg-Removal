@@ -5,7 +5,9 @@ EraseBg is a full-stack SaaS application for AI-powered background removal from 
 ---
 
 
-## Table of Contents
+- [Live Preview](#live-preview)
+- [Demo Video](#demo-video)
+- [Screenshots](#screenshots)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Frontend](#frontend)
@@ -16,15 +18,31 @@ EraseBg is a full-stack SaaS application for AI-powered background removal from 
 - [Payments (Razorpay)](#payments-razorpay)
 - [API Endpoints](#api-endpoints)
 - [Project Structure](#project-structure)
-- [Screenshots](#screenshots)
 - [How to Run Locally](#how-to-run-locally)
 - [Environment Variables](#environment-variables)
 - [License](#license)
 ---
 
-## Screenshots
 
-Add screenshots of your main pages and features here:
+---
+
+## Live Preview
+
+```
+[Live Preview](https://your-live-app-link.com)
+```
+
+---
+
+## Demo Video
+
+```
+![Demo Video](screenshots/demo.gif)
+```
+
+---
+
+## Screenshots
 
 ```
 ![Dashboard](screenshots/dashboard.png)
